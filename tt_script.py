@@ -120,11 +120,11 @@ def get_rows_from_db(page, rows):
         error['error'] = 'Please, enter the number of rows at first.'
     else:
         info = db.execute(
-            'select * from geo_object where geonameid between ? and ? order by geonameid',
-            (((page-1)*rows)+min_geonameid['min(geonameid)'], (page*rows)+min_geonameid['min(geonameid)'])
-        ).fetchall()
+            'select * from geo_object where geonameid >= ?',
+            (((page-1)*rows)+min_geonameid['min(geonameid)'],)
+        ).fetchmany(rows)
         if info is None:
-            error['error'] = 'Incorrect id.'
+            error['error'] = 'Incorrect values.'
 
     if error['error'] is None:
         return info
